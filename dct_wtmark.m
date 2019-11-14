@@ -16,9 +16,22 @@ end
 im        = imresize(im,[512 512]); % Resize image
 watermark = wt;% Resize and Change in binary 
 
+figure
+subplot(1,4,1)
+imshow(im); % displaying objective image
+title('Objective image');
+
 x={}; % empty cell which will consist all blocks
 dct_img=blkproc(im,[8,8],@dct2);% DCT of image using 8X8 block
 m=dct_img; % Sorce image in which watermark will be inserted 
+
+subplot(1,4,2);
+imshow(m) % displaying image to be hidden
+title('DCT image which will be watermarked');
+
+subplot(1,4,3);
+imshow(watermark) % displaying image to be hidden
+title('Watermark');
 
 k=1; dr=0; dc=0;
 % dr is to address 1:8 row every time for new block in x
@@ -81,5 +94,15 @@ for i=1:64
     embimg=[embimg;embimg1{i}];
 end
 embimg=(uint8(blkproc(embimg,[8 8],@idct2)));
-imwrite(embimg,'out.jpg')
+
+%imshow(embimg)
+subplot(1,4,4);
+imshow(embimg) % displaying image to be hidden
+title('wtermarked image result');
+
+imwrite(embimg,'./image_result/dct_result.jpg')
+
+
 p=psnr(im,embimg);
+
+%dct_wtmark('./image/lena.jpg','./image_wmark/bing.jpg')
