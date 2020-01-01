@@ -8,10 +8,13 @@ function [embimg,p]=wtmark(im,wt)
 % p      = PSNR of Embedded image
 
 % Checking Dimnesions
-im=imread('b.jpg');
+im=imread(im);
 if length(size(im))>2
     im=rgb2gray(im);
+    imwrite(im,'./image_togrey/dct_togrey.jpg')
 end
+
+
 
 im        = imresize(im,[512 512]); % Resize image
 watermark = wt;% Resize and Change in binary 
@@ -103,6 +106,22 @@ title('wtermarked image result');
 imwrite(embimg,'./image_result/dct_result.jpg')
 
 
-p=psnr(im,embimg);
+%p=psnr(im,embimg);
+y=psnr(embimg,im)
+embimg=im2double(embimg);
+im=im2double(im);
+[m n]=size(im);
+
+%mserror
+error=embimg - im;
+se=error.*error;
+sumse=sum(sum(se));
+mse=sumse/(m*n);
+%mserror
+
+ma=max(max(embimg));
+y=10*log10(ma*ma/mse);
+%disp(y)
+fprintf('\n The Peak-SNR value is %0.4f', y);
 
 %dct_wtmark('./image/lena.jpg','./image_wmark/bing.jpg')

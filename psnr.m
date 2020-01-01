@@ -1,14 +1,18 @@
-function y=psnr(processed,original)
-processed=im2double(processed);
-original=im2double(original);
-[m n]=size(original);
+function [psnr]=psnr(I,K)
+I=double(I);
+K=double(K);
 
-%mserror
-error=processed - original;
-se=error.*error;
-sumse=sum(sum(se));
-mse=sumse/(m*n);
-%mserror
-
-ma=max(max(processed));
-y=10*log10(ma*ma/mse);
+if (I==K)
+    psnr=100;
+else
+    [r c p]=size(I);
+    d=0;
+    for i=1:r
+        for j=1:c
+            d=d+(I(i,j)-K(i,j))^2;
+        end
+    end
+    mse=d/(r*c);
+    maximum=max(I(:));
+    psnr=10*log10(maximum^2/mse);
+end
